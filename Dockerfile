@@ -1,5 +1,6 @@
-FROM ubuntu:22.04
-MAINTAINER https://github.com/gseldon
+FROM ubuntu:24.04
+LABEL maintainer="coral xciii <coralhl@gmail.com>" \
+      description="ViPNet Client 4 docker container based on Ubuntu Linux"
 ARG INSTALL_DEB_PACKAGE
 
 ENV WEB_HEALTHCHECK=${WEB_HEALTHCHECK}

@@ -1,6 +1,5 @@
-[![Snyk Container](https://github.com/gseldon/vipnet-client-docker/actions/workflows/snyk-container.yml/badge.svg)](https://github.com/gseldon/vipnet-client-docker/actions/workflows/snyk-container.yml)
 ## ViPNet Client 4 
-_(докер клиент на базе Ubuntu)_
+_(клиент на базе Ubuntu или Debian)_
 
 ### Подготовка к сборке образа.
 
@@ -20,19 +19,26 @@ INSTALL_DEB_PACKAGE="" # если нужна сборка
 Варианты ```HEALTHCHECK_CMD```
 ```
 # проверка через пинг
-ping -c 4 ${WEB_HEALTHCHECK}'
+ping -c 4 ${WEB_HEALTHCHECK}
 ```
 
 ```
 # проверка через web
-curl -o /dev/null -s -w "%{http_code}\n" ${WEB_HEALTHCHECK}'
+curl -o /dev/null -s -w "%{http_code}\n" https://${WEB_HEALTHCHECK}
 ```
 ### Docker Build
 
 ```sh
 docker build \
--t gseldon/vipnet:test \
---build-arg INSTALL_DEB_PACKAGE=vipnetclient_gost_ru_amd64_4.12.0-8655.deb \
+-t coralhl/vipnetclient:ubuntu \
+--build-arg INSTALL_DEB_PACKAGE=vipnetclient_ru_amd64_4.15.0-26717.deb \
+--no-cache .
+```
+или
+```sh
+docker build \
+-t coralhl/vipnetclient:debian -f Dockerfile.deb \
+--build-arg INSTALL_DEB_PACKAGE=vipnetclient_ru_amd64_4.15.0-26717.deb \
 --no-cache .
 ```
 
@@ -43,7 +49,7 @@ version: '3.8'
 
 services:
     vpn:
-        image: gseldon/vipnetclient:latest
+        image: coralhl/vipnetclient:debian
         container_name: vipnet
         cap_add:
             - net_admin
