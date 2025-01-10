@@ -70,8 +70,8 @@ services:
     service:
         image: ubuntu
         depends_on: 
-        vpn:
-            condition: service_healthy
+            vpn:
+                condition: service_healthy
         network_mode: "service:vpn"
         restart: unless-stopped
 ```
