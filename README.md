@@ -48,25 +48,29 @@ docker build \
 version: '3.8'
 
 services:
-    vpn:
-        image: coralhl/vipnetclient:debian
-        container_name: vipnet
-        cap_add:
-            - net_admin
-        env_file:
-            - ./.env
-        tmpfs:
-            - /run
-            - /tmp
-        restart: unless-stopped
-        privileged: true
-        security_opt:
-            - label:disable
-        stdin_open: true
-        tty: true
-        volumes:
-            - /dev/net:/dev/net:z
-            - ./app/key.dst:/vipnet/key.dst
+  vpn:
+    image: coralhl/vipnetclient:debian
+    container_name: vipnet-client
+    env_file:
+      - ./.env
+    restart: unless-stopped
+    privileged: true
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+    environment:
+      - HEALTHCHECK_CMD=$HEALTHCHECK_CMD
+      - DNS_SERVER=77.88.8.88,77.88.8.2
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - ./app/key.dst:/vipnet/key.dst
+      - ./app/data/:/vipnet/
+    healthcheck:
+      test: ${HEALTHCHECK_CMD}
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
     service:
         image: ubuntu
         depends_on: 
