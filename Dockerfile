@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get -o Acquire::Max-FutureTime=86400 update && \
     apt-get upgrade -y && \
-    apt-get -fyq install procps cron curl && \
+    apt-get -fyq install cron curl iputils-ping procps && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY ./entrypoint.sh /entrypoint.sh
